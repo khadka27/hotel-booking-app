@@ -1,5 +1,7 @@
+// src/components/BookingForm.tsx
 "use client";
 import { useState } from "react";
+import { TextField, Button, Box } from "@mui/material";
 
 interface BookingFormProps {
   listingId: number;
@@ -19,12 +21,9 @@ export default function BookingForm({
     e.preventDefault();
     const response = await fetch("/api/bookings/create", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        // In a real application, you’d extract the customer ID from the session
-        customerId: 1, // dummy customer ID
+        customerId: 1, // Replace with actual customer ID from session
         listingId,
         unitId,
         startTime,
@@ -37,30 +36,28 @@ export default function BookingForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block mb-1">Start Time:</label>
-        <input
-          type="datetime-local"
-          value={startTime}
-          onChange={(e) => setStartTime(e.target.value)}
-          className="border p-2 rounded w-full"
-          required
-        />
-      </div>
-      <div>
-        <label className="block mb-1">End Time:</label>
-        <input
-          type="datetime-local"
-          value={endTime}
-          onChange={(e) => setEndTime(e.target.value)}
-          className="border p-2 rounded w-full"
-          required
-        />
-      </div>
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+      <TextField
+        label="Start Time"
+        type="datetime-local"
+        value={startTime}
+        onChange={(e) => setStartTime(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        fullWidth
+        sx={{ mb: 2 }}
+      />
+      <TextField
+        label="End Time"
+        type="datetime-local"
+        value={endTime}
+        onChange={(e) => setEndTime(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        fullWidth
+        sx={{ mb: 2 }}
+      />
+      <Button type="submit" variant="contained" color="primary">
         Book Now
-      </button>
-    </form>
+      </Button>
+    </Box>
   );
 }

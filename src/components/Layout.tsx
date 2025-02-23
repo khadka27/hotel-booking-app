@@ -1,5 +1,4 @@
 import Link from "next/link";
-import ThemeToggle from "./ThemeToggle";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,7 +10,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Link href="/vendor/dashboard">Vendor</Link>
           <Link href="/admin/dashboard">Admin</Link>
         </nav>
-        <ThemeToggle />
       </header>
       <main className="p-4">{children}</main>
     </div>
