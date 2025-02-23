@@ -1,0 +1,100 @@
+// prisma/schema.prisma
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id          Int       @id @default(autoincrement())
+    name        String
+    email       String    @unique
+    password    String
+    role        Role
+    contactInfo String?
+    listings    Listing[] // For vendors: the properties they manage
+    bookings    Booking[] // For customers: their bookings
+    reviews     Review[]
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+}
+
+enum Role {
+    CUSTOMER
+    VENDOR
+    ADMIN
+}
+
+model Listing {
+    id          Int         @id @default(autoincrement())
+    vendorId    Int
+    vendor      User        @relation(fields: [vendorId], references: [id])
+    type        ListingType
+    name        String
+    address     String
+    description String
+    facilities  String
+    pricing     Float
+    images      String // Consider storing image URLs as a JSON string or use the native JSON type
+    units       Unit[]
+    bookings    Booking[]
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+}
+
+enum ListingType {
+    HOTEL
+    RESTAURANT
+}
+
+model Unit {
+    id        Int       @id @default(autoincrement())
+    listingId Int
+    listing   Listing   @relation(fields: [listingId], references: [id])
+    type      String // e.g., "Single Room", "Double Room", or "Table for Two"
+    capacity  Int
+    price     Float
+    available Boolean   @default(true)
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    Booking   Booking[]
+}
+
+model Booking {
+    id             Int           @id @default(autoincrement())
+    customerId     Int
+    customer       User          @relation(fields: [customerId], references: [id])
+    listingId      Int
+    listing        Listing       @relation(fields: [listingId], references: [id])
+    unitId         Int
+    unit           Unit          @relation(fields: [unitId], references: [id])
+    startTime      DateTime
+    endTime        DateTime
+    status         BookingStatus @default(PENDING)
+    paymentDetails String? // Dummy payment details can be stored here
+    review         Review?
+    createdAt      DateTime      @default(now())
+    updatedAt      DateTime      @updatedAt
+}
+
+enum BookingStatus {
+    PENDING
+    CONFIRMED
+    CANCELLED
+}
+
+model Review {
+    id         Int      @id @default(autoincrement())
+    bookingId  Int      @unique
+    booking    Booking  @relation(fields: [bookingId], references: [id])
+    customerId Int
+    customer   User     @relation(fields: [customerId], references: [id])
+    rating     Int
+    comments   String?
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
