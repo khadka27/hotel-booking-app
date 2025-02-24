@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     const { bookingId } = await request.json()
     const updatedBooking = await prisma.booking.update({
       where: { id: Number(bookingId) },
-      data: { status: 'Cancelled' },
+      data: { status: 'CANCELLED' },
     })
     return NextResponse.json(updatedBooking)
   } catch (error) {

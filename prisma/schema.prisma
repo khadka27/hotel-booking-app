@@ -1,5 +1,3 @@
-// prisma/schema.prisma
-
 datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
@@ -39,7 +37,8 @@ model Listing {
     description String
     facilities  String
     pricing     Float
-    images      String // Consider storing image URLs as a JSON string or use the native JSON type
+    images      String // Consider storing image URLs as a JSON string or using the native JSON type
+    approved    Boolean     @default(false) // <-- Add this field
     units       Unit[]
     bookings    Booking[]
     createdAt   DateTime    @default(now())
@@ -61,7 +60,7 @@ model Unit {
     available Boolean   @default(true)
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
-    Booking   Booking[]
+    bookings  Booking[]
 }
 
 model Booking {

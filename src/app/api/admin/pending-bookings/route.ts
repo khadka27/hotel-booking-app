@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const pendingBookings = await prisma.booking.findMany({
-      where: { status: "Pending" },
+      where: { status: "PENDING" },
     });
     return NextResponse.json(pendingBookings);
   } catch (error) {
